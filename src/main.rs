@@ -1,24 +1,14 @@
-use sfml::system::Vector2f;
-use sfml::window::{ Event, Style};
-use sfml::graphics::{RenderWindow, RenderTarget, RectangleShape, Color, Transformable, Shape};
+use sfml::{window::{ Event, Style}, graphics::{RenderWindow, RenderTarget, RectangleShape, Color, Transformable, Shape}, system::Vector2f};
 use rand::Rng;
-
 fn main() {
-    let size = 4;
-    let num_cell: i32 = 200;
+    let size = 10;
+    let num_cell: i32 = 80;
     let win_size: u32 = 800;
     let mut next_state: Vec<Vec<u8>> = vec![vec![0; num_cell as usize]; num_cell as usize];
     let mut state: Vec<Vec<u8>> = vec![vec![0; num_cell as usize]; num_cell as usize];
-    let mut window = RenderWindow::new((win_size, win_size),
-                                "Life",
-                                Style::CLOSE,
-                                &Default::default());
-    
-    //window.set_framerate_limit(60);                            
+    let mut window = RenderWindow::new((win_size, win_size), "Life", Style::CLOSE, &Default::default());                          
     for i in 0..num_cell{                                    
         for j in 0..num_cell{
-            
-            //grid[i as usize][j as usize] = Cell{rect: r, state: rand::thread_rng().gen_range(0..2)};
             state[i as usize][j as usize ] = rand::thread_rng().gen_range(0..2) as u8;
         }
     }
@@ -33,14 +23,11 @@ fn main() {
             }
         }
         window.set_active(true);
-
             window.clear(Color::BLACK);
-
             for i in 0..num_cell{
                 for j in 0..num_cell{
                     let mut sum = 0;
-                    state[i as usize].push(0);
-                    let mut cl = state[i as usize].swap_remove(j as usize);
+                    let cl = state[i as usize][j as usize];
                     for k in -1..2{
                         for l in -1..2{
                             if !(k==0 && l==0){
@@ -61,7 +48,6 @@ fn main() {
                     }else{
                         next_state[i as usize][j as usize] = cl;
                     }
-
                     if cl == 0{
                         r.set_fill_color(Color::BLACK);
                     }else{
@@ -72,9 +58,7 @@ fn main() {
                     state[i as usize].swap_remove(j as usize);
                 }
             }
-            state = (*next_state).to_vec();
-
-            
+            state = (*next_state).to_vec();          
             window.display();
     }
 }
