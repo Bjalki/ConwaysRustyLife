@@ -1,12 +1,12 @@
 use sfml::{window::{ Event, Style}, graphics::{RenderWindow, RenderTarget, RectangleShape, Color, Transformable, Shape}, system::Vector2f};
 use rand::Rng;
 fn main() {
-    let size = 10;
-    let num_cell: i32 = 80;
+    let size = 2;
+    const num_cell: i32 = 400;
     let win_size: u32 = 800;
-    let mut next_state: Vec<Vec<u8>> = vec![vec![0; num_cell as usize]; num_cell as usize];
-    let mut state: Vec<Vec<u8>> = vec![vec![0; num_cell as usize]; num_cell as usize];
-    let mut window = RenderWindow::new((win_size, win_size), "Life", Style::CLOSE, &Default::default());                          
+    let mut window = RenderWindow::new((win_size, win_size), "Life", Style::CLOSE, &Default::default());  
+    let mut state = [[0; num_cell as usize]; num_cell as usize];
+    let mut next_state = [[0; num_cell as usize]; num_cell as usize];
     for i in 0..num_cell{                                    
         for j in 0..num_cell{
             state[i as usize][j as usize ] = rand::thread_rng().gen_range(0..2) as u8;
@@ -43,22 +43,18 @@ fn main() {
                     r.set_position(pos);
                     if cl == 0 && sum == 3{
                         next_state[i as usize][j as usize] = 1;
+                        r.set_fill_color(Color::RED);
+                        window.draw(&r);
                     }else if cl == 1 && (sum <2 || sum > 3){
                         next_state[i as usize][j as usize] = 0;
+                        r.set_fill_color(Color::BLACK);
+                        window.draw(&r);
                     }else{
                         next_state[i as usize][j as usize] = cl;
                     }
-                    if cl == 0{
-                        r.set_fill_color(Color::BLACK);
-                    }else{
-                        r.set_fill_color(Color::RED);
-                    }
-                    window.draw(&r);
-                    state[i as usize].push(cl);
-                    state[i as usize].swap_remove(j as usize);
                 }
             }
-            state = (*next_state).to_vec();          
+            state = next_state;          
             window.display();
     }
 }
